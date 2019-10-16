@@ -1,0 +1,25 @@
+<div class="container">
+  {{#each party}}
+  <form id="{{this._id}}" class="partyContainer" name="partyContainer" action="/">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">{{this.location}}</h4>
+        <h6 name="date" class="card-subtitle mb-2 text-muted">{{this.date}}</h6>
+        <p class="card-text">
+          {{this.details}}
+        </p>
+        <span class="badge badge-dark">Гости: {{this.guests.length}}</span>
+        <div id="join-container">
+        <a id="join" href="/party/join/{{this._id}}">Join</a>
+        </div>
+        <a id="del" href="/party/delete{{this._id}}">del</a>
+        <a id="update" href="/party/update/{{this._id}}">update</a>
+        <a id="{{this.host._id}}" class="patyAuthor" href="/">Host: {{this.host.userName}}</a>
+      </div>
+    </div>
+  </form>
+  {{/each}}
+  <div class="position-relative">
+    <a href="/party/new" class="stretched-link">Add party</a>
+  </div>
+</div>
