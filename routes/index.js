@@ -1,35 +1,24 @@
 const express = require('express');
 
 const router = express.Router();
-const handlebars = require('express-handlebars');
-const path = require('path');
 const User = require('../models/user');
 const Party = require('../models/party');
-const { sessionChecker } = require('../middleware/auth');
-/* GET home page. */
+const passport = require('passport');
+const { yandexGeocoder } = require('nodejs-yandex-geocoder')
 
-const hbs = handlebars.create({
-  defaultLayout: 'layout',
-  extname: 'hbs',
-  layoutsDir: path.join(__dirname, 'views'),
-  partialsDir: path.join(__dirname, 'views/'),
-});
+// facebook auth
 
-const exposeTemplates = async (req, res, next) => {
-  res.templateLogin = await hbs.getTemplate('views/login.hbs', {
-    precompiled: true,
+router.get('/login/facebook',
+  passport.authenticate('facebook', { authType: 'rerequest' }));
+
+router.get('/auth/facebook/callback',
+  passport.authenticate('facebook', { failureRedirect: '/login' }),
+  (req, res) => {
+
+    req.session.user = req.user
+    // Successful authentication, redirect home.
+    res.redirect('/');
   });
-  res.templateRegistration = await hbs.getTemplate('views/registration.hbs', {
-    precompiled: true,
-  });
-  res.templateIndex = await hbs.getTemplate('views/index.hbs', {
-    precompiled: true,
-  });
-  res.updateIndex = await hbs.getTemplate('views/update.hbs', {
-    precompiled: true,
-  });
-  next();
-};
 
 router.get('/', async (req, res) => {
   if (req.session.user) {
@@ -40,6 +29,7 @@ router.get('/', async (req, res) => {
   }
 });
 
+// login
 
 router.get('/login', async (req, res) => {
   res.render('login');
@@ -47,16 +37,22 @@ router.get('/login', async (req, res) => {
 
 router.post('/login', async (req, res) => {
   const user = await User.findOne({ email: req.body.email });
+  if (!user) {
+    return res.render('login', { error: 'пользователь не найден' });
+  } else if (req.body.password !== user.password) {
+    return res.render('login', { error: 'неверный пароль' });
+  }
+
   req.session.user = user;
-  console.log(req.session.user);
 
   res.redirect('/');
 });
 
+//registration
 
 router.post('/registration', async (req, res) => {
-  const userCheck = User.findOne({email: req.body.email})
-  if(userCheck){
+  const userCheck = User.findOne({ email: req.body.email })
+  if (userCheck) {
     res.redirect('/registration')
   }
 
@@ -76,8 +72,10 @@ router.get('/registration', async (req, res) => {
   res.render('registration');
 });
 
+// logout
+
 router.get('/logout', async (req, res, next) => {
-  if (req.session.user && req.cookies.user_sid) {
+  if (req.session.user) {
     try {
       await req.session.destroy();
       res.redirect('/');
@@ -88,6 +86,17 @@ router.get('/logout', async (req, res, next) => {
     res.redirect('/login');
   }
 });
+
+// maps
+router.get('/maps', async (req, res) => {
+
+  
+  res.render('maps', { user: req.session.user });
+});
+
+
+
+
 
 
 module.exports = router;

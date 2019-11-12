@@ -1,16 +1,23 @@
 <div class="container">
-<form id="logForm" method="POST" action="/login">
-  <div class="form-group">
-    <label for="formGroupExampleInput2">Email</label>
-    <input name="email" type="email" class="form-control" placeholder="Enter your email">
-  </div>
-  <div class="form-group">
-    <label for="formGroupExampleInput2">Password</label>
-    <input name="password" type="password" class="form-control" placeholder="Enter your password">
-  </div>
-  <p><input type="submit" class="btn btn-primary"></p>
-  <div class="position-relative">
-  <a id="regLink" name="regLink" href="/registration" class="stretched-link">Registration</a>
-  </div>
-</form>
+  <form id="logForm" method="POST" action="/login">
+    <div class="form-group">
+      <label for="formGroupExampleInput2">Email</label>
+      {{#if error}}
+      <input name="email" type="email" class="form-control" placeholder="{{error}}">
+      {{else}}
+      <input name="email" type="email" class="form-control" placeholder="Enter your email">
+      {{/if}}
+    </div>
+    <div class="form-group">
+      <label for="formGroupExampleInput2">Password</label>
+      <input name="password" type="password" class="form-control" placeholder="Enter your password">
+    </div>
+    <p><input type="submit" class="btn btn-primary"></p>
+    <div class="position-relative">
+      <a id="regLink" name="regLink" href="/registration" class="stretched-link">Registration</a>
+    </div>
+    <div class="position-relative">
+      <a id="regLink" name="regLink" href="/login/facebook" class="stretched-link">FB</a>
+    </div>
+  </form>
 </div>

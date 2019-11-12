@@ -10,7 +10,7 @@
         </p>
         <span class="badge badge-dark">Гости: {{this.guests.length}}</span>
         <div id="join-container">
-        <a id="join" href="/party/join/{{this._id}}">Join</a>
+          <a id="join" href="/party/join/{{this._id}}">Join</a>
         </div>
         <a id="del" href="/party/delete{{this._id}}">del</a>
         <a id="update" href="/party/update/{{this._id}}">update</a>
@@ -20,6 +20,10 @@
   </form>
   {{/each}}
   <div class="position-relative">
-    <a href="/party/new" class="stretched-link">Add party</a>
+    <a href="/party/new" class="stretched-link">Add event</a>
+  </div>
+   <div class="map-conteiner">
+  {{>maps}}
   </div>
 </div>
+ 

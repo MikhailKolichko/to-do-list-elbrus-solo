@@ -1,6 +1,5 @@
 const express = require('express');
 
-const app = express();
 
 const morgan = require('morgan');
 const handlebars = require('express-handlebars');
@@ -9,26 +8,18 @@ const session = require('express-session');
 const path = require('path');
 const FileStore = require('session-file-store')(session);
 const { connect } = require('mongoose');
+const User = require('./models/user');
 const { cookiesCleaner } = require("./middleware/auth");
+const passport = require('passport');
+const bodyParser = require("body-parser");
+const FacebookStrategy = require('passport-facebook')
 
-app.use(morgan('dev'));
-
-app.use(express.urlencoded({ extended: true }));
-
-app.use(express.json());
-
-app.use(cookieParser());
-
-const fileStoreOptions = {};
-
-connect("mongodb://localhost:27017/PartyApp", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-});
+const app = express();
+// passport
 
 app.use(
   session({
-    store: new FileStore(fileStoreOptions),
+    store: new FileStore({}),
     key: 'user_sid',
     secret: 'anything here',
     resave: false,
@@ -38,6 +29,33 @@ app.use(
     },
   }),
 );
+
+//app.use(session({ secret: '72e52d6b6517fe86634ef2e6e8424636' }));
+app.use(passport.initialize());
+app.use(passport.session());
+
+const initPassport = require('./passport/init');
+initPassport(passport)
+
+// google
+
+// 
+
+app.use(morgan('dev'));
+
+app.use(express.urlencoded({ extended: true }));
+
+app.use(express.json());
+
+app.use(cookieParser());
+
+
+connect("mongodb://localhost:27017/PartyApp", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+
+
 
 // This middleware will check if user's cookie is still saved in browser and user is not set, then automatically log the user out.
 // This usually happens when you stop your express server after login, your cookie still remains saved in the browser.
