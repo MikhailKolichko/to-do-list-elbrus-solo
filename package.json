@@ -28,7 +28,7 @@
     "geohash": "0.0.1",
     "mongoose": "^5.7.5",
     "morgan": "^1.9.1",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "nodejs-yandex-geocoder": "^1.0.5",
     "npm": "^6.12.0",
     "passport": "^0.4.0",
